@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold">Welcome, {{ session.get('name') }} 👋</h2>
+        <p class="text-secondary">Your AI-powered career command center.</p>
+    </div>
+    <form method="post" action="{{ url_for('analyze') }}">
+        <button class="btn btn-primary">🚀 Run AI Career Analysis</button>
+    </form>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="text-secondary">Available Jobs</div>
+            <div class="display-6 fw-bold">{{ jobs_count }}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="text-secondary">Profile</div>
+            <div class="display-6 fw-bold">{{ "Ready" if profile else "Incomplete" }}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="text-secondary">AI Analysis</div>
+            <div class="display-6 fw-bold">{{ "Available" if analysis else "Pending" }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm p-4">
+            <h4>Next steps</h4>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('profile') }}" class="list-group-item list-group-item-action">👤 Complete your profile</a>
+                <a href="{{ url_for('resume') }}" class="list-group-item list-group-item-action">📄 Upload your resume</a>
+                <a href="{{ url_for('jobs') }}" class="list-group-item list-group-item-action">💼 Explore available jobs</a>
+                {% if analysis %}
+                <a href="{{ url_for('results') }}" class="list-group-item list-group-item-action">📊 View latest AI career report</a>
+                {% endif %}
+                <a href="{{ url_for('interview') }}" class="list-group-item list-group-item-action">🎤 Practice interview</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm p-4">
+            <h5>How the agents work</h5>
+            <p class="small text-secondary">Profile → Jobs → Skill Gap → Roadmap → Interview → Career Report</p>
+            <div class="progress mb-3" role="progressbar">
+                <div class="progress-bar" style="width: 85%">Agent Workflow</div>
+            </div>
+            <p class="small mb-0">AI recommendations are advisory and should be reviewed by the candidate.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

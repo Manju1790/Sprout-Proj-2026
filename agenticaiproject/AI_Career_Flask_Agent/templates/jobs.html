@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+<div>
+<h2 class="fw-bold">Recommended & Available Jobs</h2>
+<p class="text-secondary">Search the local job dataset or run AI analysis for personalized matching.</p>
+</div>
+</div>
+<form class="row g-2 mb-4">
+<div class="col-md-5"><input class="form-control" name="search" value="{{ search }}" placeholder="Python Developer, SQL, Flask..."></div>
+<div class="col-md-3"><input class="form-control" name="location" value="{{ location }}" placeholder="Chennai"></div>
+<div class="col-md-2"><button class="btn btn-dark w-100">Search</button></div>
+</form>
+<div class="row g-4">
+{% for job in jobs %}
+<div class="col-lg-6">
+<div class="card job-card h-100 border-0 shadow-sm p-4">
+<div class="d-flex justify-content-between">
+<div>
+<h4>{{ job.role }}</h4>
+<p class="mb-1 fw-semibold">{{ job.company }}</p>
+<p class="text-secondary">{{ job.location }} · ₹{{ "{:,}".format(job.salary) }}</p>
+</div>
+<span class="badge text-bg-primary align-self-start">{{ job.experience }}</span>
+</div>
+<div class="mb-3">
+{% for skill in job.skills.split(',') %}
+<span class="skill-tag">{{ skill }}</span>
+{% endfor %}
+</div>
+<a href="{{ url_for('job_details', job_id=job.job_id) }}" class="btn btn-outline-dark">View Details →</a>
+</div>
+</div>
+{% else %}
+<div class="col-12"><div class="alert alert-info">No jobs found.</div></div>
+{% endfor %}
+</div>
+{% endblock %}

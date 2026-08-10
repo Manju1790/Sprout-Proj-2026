@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero py-5">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+            <span class="badge text-bg-primary mb-3">Agentic AI Career Platform</span>
+            <h1 class="display-4 fw-bold">Find the right job. Close your skill gaps. Prepare with AI.</h1>
+            <p class="lead text-secondary mt-3">
+                Upload your profile and let specialized AI agents analyze your career,
+                match jobs, create a roadmap and prepare you for interviews.
+            </p>
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg mt-3">Start Career Analysis →</a>
+        </div>
+        <div class="col-lg-5">
+            <div class="card shadow-lg border-0 p-4">
+                <h5>AI Agent Workflow</h5>
+                <div class="workflow-item">👤 Profile Agent</div>
+                <div class="workflow-item">💼 Job Matching Agent</div>
+                <div class="workflow-item">🎯 Skill Gap Agent</div>
+                <div class="workflow-item">🗺️ Career Roadmap Agent</div>
+                <div class="workflow-item">🎤 Interview Agent</div>
+                <div class="workflow-item">📊 Career Advisor</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

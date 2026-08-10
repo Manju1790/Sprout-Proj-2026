@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-lg-9">
+<div class="card border-0 shadow-sm p-5">
+<h2 class="fw-bold">🎤 AI Mock Interview</h2>
+<p class="text-secondary">Use the interview questions generated for your target role.</p>
+{% if analysis %}
+<div class="alert alert-primary">Your latest interview preparation is available below.</div>
+<div class="ai-output"><pre>{{ analysis.interview }}</pre></div>
+{% else %}
+<div class="text-center py-5">
+<div class="display-5">🤖</div>
+<h4>No interview plan yet</h4>
+<p>Complete your profile and run AI Career Analysis first.</p>
+<a class="btn btn-primary" href="{{ url_for('dashboard') }}">Go to Dashboard</a>
+</div>
+{% endif %}
+</div>
+</div>
+</div>
+{% endblock %}

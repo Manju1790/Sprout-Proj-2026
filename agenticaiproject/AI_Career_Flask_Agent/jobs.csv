@@ -1,0 +1,9 @@
+job_id,company,role,location,skills,experience,salary
+J001,TechNova,Python Developer,Chennai,"Python,SQL,Flask,REST API,Git",0-2 years,600000
+J002,DataWorks,Data Analyst,Bangalore,"Python,SQL,Pandas,Power BI,Excel",0-2 years,550000
+J003,AILabs,Machine Learning Engineer,Hyderabad,"Python,Machine Learning,Scikit-learn,SQL,Statistics",1-3 years,900000
+J004,CloudTech,Backend Developer,Chennai,"Python,FastAPI,REST API,PostgreSQL,Docker",0-2 years,700000
+J005,FinTech Solutions,Data Scientist,Bangalore,"Python,Pandas,NumPy,Machine Learning,Statistics",1-3 years,1000000
+J006,WebCore,Full Stack Developer,Hyderabad,"Python,React,JavaScript,REST API,SQL",0-2 years,750000
+J007,AI Innovations,AI Engineer,Chennai,"Python,LLM,RAG,LangChain,Machine Learning",0-2 years,850000
+J008,CloudWorks,DevOps Engineer,Bangalore,"Linux,Docker,Kubernetes,AWS,Git",1-3 years,950000

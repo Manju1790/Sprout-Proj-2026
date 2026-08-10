@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-card">
+    <div class="card border-0 shadow p-4">
+        <h2 class="fw-bold">Create your career profile</h2>
+        <p class="text-secondary">The AI agents will use it for job matching.</p>
+        <form method="post">
+            <label class="form-label">Name</label>
+            <input class="form-control mb-3" name="name" required>
+            <label class="form-label">Email</label>
+            <input class="form-control mb-3" type="email" name="email" required>
+            <label class="form-label">Password</label>
+            <input class="form-control mb-4" type="password" name="password" required>
+            <button class="btn btn-primary w-100">Create Account</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

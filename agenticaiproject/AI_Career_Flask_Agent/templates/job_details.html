@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-lg-9">
+<div class="card border-0 shadow-sm p-5">
+<a href="{{ url_for('jobs') }}" class="text-decoration-none">← Back to jobs</a>
+<h1 class="fw-bold mt-3">{{ job.role }}</h1>
+<h5>{{ job.company }}</h5>
+<p class="text-secondary">{{ job.location }} · {{ job.experience }} · ₹{{ "{:,}".format(job.salary) }}</p>
+<hr>
+<h4>Required Skills</h4>
+<div class="my-3">
+{% for skill in job.skills.split(',') %}
+<span class="skill-tag large">{{ skill }}</span>
+{% endfor %}
+</div>
+<h4 class="mt-4">How to use AI</h4>
+<p class="text-secondary">Save your profile and run Career Analysis to compare your skills against this role and generate a personalized preparation plan.</p>
+<form method="post" action="{{ url_for('analyze') }}">
+<button class="btn btn-primary">🤖 Analyze My Match</button>
+</form>
+</div>
+</div>
+</div>
+{% endblock %}
