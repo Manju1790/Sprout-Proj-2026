@@ -1,5 +1,6 @@
 import os
 from functools import wraps
+import threading
 
 from flask import (
     Flask, render_template, request, redirect,
@@ -14,6 +15,7 @@ from database import (
     load_jobs, get_job
 )
 from graph import build_graph
+from agents import _fallback_response
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "change-this-secret-key")
@@ -166,6 +168,33 @@ def resume():
     return render_template("resume.html", profile=profile)
 
 
+def _run_analysis(user_id, career_profile, jobs):
+    graph = build_graph()
+    state = {
+        "profile": career_profile,
+        "jobs_text": jobs.to_string(index=False),
+        "profile_analysis": "",
+        "job_matching": "",
+        "skill_gap": "",
+        "roadmap": "",
+        "interview": "",
+        "final_report": "",
+    }
+
+    try:
+        result = graph.invoke(state)
+    except Exception as exc:
+        result = {
+            "profile_analysis": _fallback_response("profile analysis"),
+            "job_matching": _fallback_response("job matching"),
+            "skill_gap": _fallback_response("skill gaps"),
+            "roadmap": _fallback_response("roadmap"),
+            "interview": _fallback_response("interview prep"),
+            "final_report": _fallback_response("final report"),
+        }
+    save_analysis(user_id, result)
+
+
 @app.route("/analyze", methods=["POST"])
 @login_required
 def analyze():
@@ -187,29 +216,25 @@ def analyze():
         "resume_text": profile.get("resume_text", ""),
     }
 
-    try:
-        graph = build_graph()
+    placeholder = {
+        "profile_analysis": "AI career analysis has started. Results may take up to 2 minutes. This page will refresh automatically.",
+        "job_matching": "AI career analysis has started. Results may take up to 2 minutes. This page will refresh automatically.",
+        "skill_gap": "AI career analysis has started. Results may take up to 2 minutes. This page will refresh automatically.",
+        "roadmap": "AI career analysis has started. Results may take up to 2 minutes. This page will refresh automatically.",
+        "interview": "AI career analysis has started. Results may take up to 2 minutes. This page will refresh automatically.",
+        "final_report": "AI career analysis has started. Results may take up to 2 minutes. This page will refresh automatically.",
+    }
+    save_analysis(session["user_id"], placeholder)
 
-        state = {
-            "profile": career_profile,
-            "jobs_text": jobs.to_string(index=False),
-            "profile_analysis": "",
-            "job_matching": "",
-            "skill_gap": "",
-            "roadmap": "",
-            "interview": "",
-            "final_report": "",
-        }
+    thread = threading.Thread(
+        target=_run_analysis,
+        args=(session["user_id"], career_profile, jobs),
+        daemon=True,
+    )
+    thread.start()
 
-        result = graph.invoke(state)
-        save_analysis(session["user_id"], result)
-
-        flash("AI career analysis completed.", "success")
-        return redirect(url_for("results"))
-
-    except Exception as exc:
-        flash(f"AI analysis failed: {exc}", "danger")
-        return redirect(url_for("dashboard"))
+    flash("AI career analysis has started. Results will appear shortly.", "info")
+    return redirect(url_for("results"))
 
 
 @app.route("/results")

@@ -20,4 +20,14 @@
 </div>
 {% endfor %}
 </div>
+
+{% set pending_message = "AI career analysis has started. Results may take up to 2 minutes. This page will refresh automatically." %}
+{% if analysis.profile_analysis == pending_message %}
+<div class="alert alert-info mt-4">
+    Analysis is still running. This page will refresh automatically every 10 seconds.
+</div>
+<script>
+    setTimeout(() => window.location.reload(), 10000);
+</script>
+{% endif %}
 {% endblock %}

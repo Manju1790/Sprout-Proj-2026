@@ -3,6 +3,14 @@ import json
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 
+
+def _fallback_response(topic: str) -> str:
+    return (
+        f"Fallback response for {topic}: "
+        "The AI service is currently unavailable, so this section uses a safe placeholder. "
+        "Please review your profile and job preferences manually or try again shortly."
+    )
+
 load_dotenv()
 
 API_KEY = os.getenv("OPENROUTER_API_KEY")
@@ -18,12 +26,16 @@ llm = ChatOpenAI(
     api_key=API_KEY,
     base_url="https://openrouter.ai/api/v1",
     temperature=0.2,
+    request_timeout=20,
 )
 
 
 def ask(prompt):
-    response = llm.invoke(prompt)
-    return response.content
+    try:
+        response = llm.invoke(prompt)
+        return response.content
+    except Exception:
+        return _fallback_response("AI service")
 
 
 def profile_agent(profile):
