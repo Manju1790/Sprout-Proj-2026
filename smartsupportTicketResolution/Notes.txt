@@ -9,3 +9,27 @@ Python app.py
 
 Open new terminal-cd frontend-npm install
 npm run dev
+
+
+git commands
+==============
+git status
+git add smartsupportTicketResolution
+git status
+git commit -m "Added Smart Support Ticket Resolution project"
+git push
+git status --ignored
+
+
+PS D:\Project 2026\Sprout-Proj-2026\smartsupportTicketResolution> python -m pytest
+================== test session starts ===================
+platform win32 -- Python 3.12.0, pytest-8.4.1, pluggy-1.6.0
+rootdir: D:\Project 2026\Sprout-Proj-2026\smartsupportTicketResolution
+plugins: anyio-4.14.2, langsmith-0.10.18
+collected 5 items 
+
+
+In frontend:
+
+npm test
+npm run build
