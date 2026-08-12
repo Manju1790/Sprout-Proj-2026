@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syllabus AI Bot - Admin & Course Management Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>SyllabusAI</h2>
+                    <span>Course Bot Admin</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#overview" class="nav-item active" data-tab="overview">
+                    <i class="fa-solid fa-chart-pie"></i> Overview & Upload
+                </a>
+                <a href="#unresolved" class="nav-item" data-tab="unresolved">
+                    <i class="fa-solid fa-circle-question"></i> Unresolved Qs
+                    <span class="badge" id="unresolved-badge">0</span>
+                </a>
+                <a href="#embed" class="nav-item" data-tab="embed">
+                    <i class="fa-solid fa-code"></i> Embed Widget
+                </a>
+                <a href="#simulator" class="nav-item" data-tab="simulator">
+                    <i class="fa-solid fa-comments"></i> Chat Simulator
+                </a>
+                <a href="#settings" class="nav-item" data-tab="settings">
+                    <i class="fa-solid fa-sliders"></i> Settings
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="active-course-card" id="sidebar-course-card">
+                    <i class="fa-solid fa-book-open"></i>
+                    <div class="course-info">
+                        <h4 id="sidebar-course-title">No Syllabus Uploaded</h4>
+                        <p id="sidebar-course-status">Upload syllabus to activate</p>
+                    </div>
+                </div>
+                <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header Bar -->
+            <header class="top-header">
+                <div class="header-title">
+                    <h1 id="page-title">Course Dashboard & Syllabus Upload</h1>
+                    <p id="page-subtitle">Manage your syllabus vector index, track unresolved questions, and get embed snippet</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-outline" id="quick-sample-btn">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Load CS101 Sample Syllabus
+                    </button>
+                    <button class="btn btn-primary" id="open-embed-modal-btn">
+                        <i class="fa-solid fa-code"></i> Get 1-Line Embed Code
+                    </button>
+                </div>
+            </header>
+
+            <!-- TAB 1: OVERVIEW & UPLOAD -->
+            <section class="tab-content active" id="tab-overview">
+                <!-- Stats Row -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <div class="stat-data">
+                            <span class="stat-label">Active Syllabus</span>
+                            <h3 id="stat-syllabus-file">None</h3>
+                            <span class="stat-sub" id="stat-chunks-count">0 Chunks Indexed</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                        <div class="stat-data">
+                            <span class="stat-label">Total Student Queries</span>
+                            <h3 id="stat-total-queries">0</h3>
+                            <span class="stat-sub" id="stat-resolution-rate">100% Accuracy Rate</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="stat-data">
+                            <span class="stat-label">Unresolved Questions</span>
+                            <h3 id="stat-pending-questions">0</h3>
+                            <span class="stat-sub">Needs Teacher Clarification</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fa-solid fa-key"></i>
+                        </div>
+                        <div class="stat-data">
+                            <span class="stat-label">Gemini API Status</span>
+                            <h3 id="stat-api-status">Checking...</h3>
+                            <span class="stat-sub" id="stat-api-model">Gemini 3.6 Flash</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Syllabus Upload Section -->
+                <div class="grid-2col">
+                    <div class="card upload-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-cloud-arrow-up"></i> Upload Syllabus Document</h3>
+                            <span class="chip">Drop PDF, TXT or CSV</span>
+                        </div>
+                        <div class="card-body">
+                            <form id="upload-form">
+                                <div class="dropzone" id="dropzone">
+                                    <input type="file" id="syllabus-file-input" accept=".pdf,.txt,.csv" class="file-input">
+                                    <div class="dropzone-content">
+                                        <div class="upload-icon">
+                                            <i class="fa-solid fa-file-circle-plus"></i>
+                                        </div>
+                                        <h4>Drag & drop syllabus PDF here</h4>
+                                        <p>or click to browse files from your computer</p>
+                                        <span class="file-hint">Supports PDF, CSV, TXT (Up to 20MB)</span>
+                                    </div>
+                                    <div class="file-preview-info hidden" id="file-preview-info">
+                                        <i class="fa-solid fa-file-pdf file-type-icon"></i>
+                                        <div class="file-details">
+                                            <strong id="preview-filename">CS101_Syllabus.pdf</strong>
+                                            <span id="preview-filesize">240 KB</span>
+                                        </div>
+                                        <button type="button" class="btn-icon remove-file-btn" id="remove-file-btn">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="custom-course-name">Custom Course Name (Optional)</label>
+                                    <input type="text" id="custom-course-name" class="form-input" placeholder="e.g. CS101: Intro to Artificial Intelligence">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-block" id="upload-submit-btn">
+                                    <i class="fa-solid fa-bolt"></i> Upload & Create Vector Search Index
+                                </button>
+                            </form>
+
+                            <div class="progress-bar-container hidden" id="upload-progress-container">
+                                <div class="progress-bar-fill" id="upload-progress-fill"></div>
+                                <span class="progress-text" id="upload-progress-text">Parsing document & creating ChromaDB vectors...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Syllabus Metadata & Status -->
+                    <div class="card syllabus-details-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-circle-info"></i> Indexed Syllabus Info</h3>
+                            <span class="chip chip-success" id="active-status-chip">Active</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="course-meta-box">
+                                <div class="meta-row">
+                                    <span class="meta-label">Course Title:</span>
+                                    <strong class="meta-value" id="meta-course-name">CS 101: Introduction to Computer Science</strong>
+                                </div>
+                                <div class="meta-row">
+                                    <span class="meta-label">Course Code:</span>
+                                    <span class="meta-value" id="meta-course-code">CS101</span>
+                                </div>
+                                <div class="meta-row">
+                                    <span class="meta-label">Instructor:</span>
+                                    <span class="meta-value" id="meta-instructor">Dr. Sarah Jenkins</span>
+                                </div>
+                                <div class="meta-row">
+                                    <span class="meta-label">Indexed Vector Chunks:</span>
+                                    <span class="meta-value" id="meta-chunk-count">12 Chunks</span>
+                                </div>
+                                <div class="meta-row">
+                                    <span class="meta-label">Uploaded File:</span>
+                                    <span class="meta-value highlight" id="meta-filename">CS101_Syllabus.pdf</span>
+                                </div>
+                                <div class="meta-row">
+                                    <span class="meta-label">Upload Date:</span>
+                                    <span class="meta-value" id="meta-upload-date">Just now</span>
+                                </div>
+                            </div>
+
+                            <div class="info-alert">
+                                <i class="fa-solid fa-lightbulb"></i>
+                                <p>When students ask questions in the widget, the chatbot retrieves relevant context from these indexed vector chunks and generates grounded responses using <strong>Gemini 3.6 Flash</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: UNRESOLVED QUESTIONS -->
+            <section class="tab-content" id="tab-unresolved">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3><i class="fa-solid fa-circle-question"></i> Unresolved Student Questions</h3>
+                            <p>Questions students asked that were missing or unclear in the uploaded syllabus</p>
+                        </div>
+                        <button class="btn btn-outline btn-sm" id="refresh-unresolved-btn">
+                            <i class="fa-solid fa-rotate"></i> Refresh List
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table" id="unresolved-table">
+                                <thead>
+                                    <tr>
+                                        <th>Frequency</th>
+                                        <th>Student Question</th>
+                                        <th>First Asked</th>
+                                        <th>Last Asked</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="unresolved-table-body">
+                                    <!-- Populated via JavaScript -->
+                                    <tr>
+                                        <td colspan="6" class="empty-state">
+                                            <i class="fa-solid fa-check-circle"></i>
+                                            <p>No unresolved questions yet! All student questions have been answered from the syllabus.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: EMBED CODE SNIPPET -->
+            <section class="tab-content" id="tab-embed">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-code"></i> 1-Line HTML Snippet Generator</h3>
+                        <span class="chip chip-primary">Plug & Play Widget</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="section-desc">Paste this single line of JavaScript into any HTML page, Canvas LMS module, Moodle page, or WordPress site to instantly add the chatbot floating widget.</p>
+
+                        <div class="code-box">
+                            <div class="code-header">
+                                <span>HTML Embed Code</span>
+                                <button class="btn btn-sm btn-primary" id="copy-snippet-btn">
+                                    <i class="fa-solid fa-copy"></i> Copy Code
+                                </button>
+                            </div>
+                            <pre><code id="embed-snippet-code">&lt;script src="http://localhost:8000/static/widget/embed.js" data-course-id="default"&gt;&lt;/script&gt;</code></pre>
+                        </div>
+
+                        <div class="instructions-grid">
+                            <div class="instruction-step">
+                                <div class="step-num">1</div>
+                                <h4>Copy HTML Snippet</h4>
+                                <p>Click the copy button above to get your custom course widget script tag.</p>
+                            </div>
+                            <div class="instruction-step">
+                                <div class="step-num">2</div>
+                                <h4>Paste in your Course Page</h4>
+                                <p>Insert before the closing <code>&lt;/body&gt;</code> tag of any webpage or Canvas page.</p>
+                            </div>
+                            <div class="instruction-step">
+                                <div class="step-num">3</div>
+                                <h4>Instant Floating Chat</h4>
+                                <p>Students see a beautiful floating chat bubble that answers syllabus questions 24/7.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: CHAT SIMULATOR -->
+            <section class="tab-content" id="tab-simulator">
+                <div class="card simulator-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-comments"></i> Live Student Chat Simulator</h3>
+                        <span class="chip">Test RAG Responses</span>
+                    </div>
+                    <div class="card-body simulator-body">
+                        <div class="sim-chat-window" id="sim-chat-window">
+                            <div class="chat-msg bot-msg">
+                                <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+                                <div class="msg-content">
+                                    Hello! I am your AI Course Assistant. Ask me anything about course policies, office hours, grading, or assignment deadlines!
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sim-input-area">
+                            <input type="text" id="sim-input" placeholder="Ask a test question (e.g. When is Assignment 2 due?)...">
+                            <button class="btn btn-primary" id="sim-send-btn">
+                                <i class="fa-solid fa-paper-plane"></i> Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: SETTINGS -->
+            <section class="tab-content" id="tab-settings">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-key"></i> Gemini API Key Configuration</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="api-key-form">
+                            <div class="form-group">
+                                <label for="api-key-input">Gemini API Key</label>
+                                <div class="input-with-btn">
+                                    <input type="password" id="api-key-input" class="form-input" placeholder="AIzaSy...">
+                                    <button type="submit" class="btn btn-primary">Save Key</button>
+                                </div>
+                                <span class="form-hint">Used for RAG context synthesis using Gemini 3.6 Flash. Stored securely in local SQLite database.</span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
