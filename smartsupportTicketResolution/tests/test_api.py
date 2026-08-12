@@ -1,6 +1,18 @@
 import os
+import sys
 import tempfile
+
 import pytest
+
+
+# Add the project root to Python's import path
+PROJECT_ROOT = os.path.dirname(
+    os.path.dirname(
+        os.path.abspath(__file__)
+    )
+)
+
+sys.path.insert(0, PROJECT_ROOT)
 
 import database
 
@@ -11,9 +23,11 @@ def client(monkeypatch):
     os.close(fd)
 
     monkeypatch.setattr(database, "DB_PATH", path)
+
     database.init_db()
 
     from app import app
+
     app.config["TESTING"] = True
 
     with app.test_client() as client:
@@ -33,6 +47,7 @@ def sample_ticket():
 
 def test_health(client):
     response = client.get("/api/health")
+
     assert response.status_code == 200
     assert response.get_json()["status"] == "ok"
 
@@ -49,6 +64,7 @@ def test_analyze(client):
     assert response.status_code == 200
 
     data = response.get_json()
+
     assert data["category"] == "Payment"
     assert data["team"] == "Billing"
 
@@ -82,6 +98,7 @@ def test_filter_and_status(client):
     assert response.get_json()["status"] == "Resolved"
 
     response = client.get("/api/tickets?status=Resolved")
+
     assert len(response.get_json()) == 1
 
 
