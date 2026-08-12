@@ -33,3 +33,6 @@ In frontend:
 
 npm test
 npm run build
+
+
+Note:github workflow should be inside repository
