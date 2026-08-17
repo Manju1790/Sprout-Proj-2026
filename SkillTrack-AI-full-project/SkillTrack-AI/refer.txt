@@ -1,0 +1,14 @@
+py -3.12 -m venv venv
+venv\Scripts\activate
+python --version
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+Copy-Item .env.example .env
+python -m pytest
+python app.py
+
+
+backend
+
+npm install
+npm run dev
